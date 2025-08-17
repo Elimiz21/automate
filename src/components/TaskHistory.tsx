@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from '@/hooks/use-toast';
 import { 
   Play, 
   Edit, 
@@ -58,7 +59,24 @@ const mockTasks: Task[] = [
 ];
 
 export const TaskHistory = () => {
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const saved = localStorage.getItem('automate-tasks');
+    const savedTasks = saved ? JSON.parse(saved) : [];
+    
+    // Convert saved tasks to Task format
+    const convertedTasks = savedTasks.map((task: any) => ({
+      id: task.id,
+      name: task.name,
+      description: task.description,
+      keySequence: task.steps?.map((step: any) => step.parameters?.key || 'Enter') || ['Enter'],
+      duration: Math.random() * 5 + 1, // Random duration for demo
+      lastUsed: new Date(task.created),
+      favorite: false,
+      category: 'automation' as const
+    }));
+
+    return [...mockTasks, ...convertedTasks];
+  });
   const [filter, setFilter] = useState<'all' | 'favorites' | 'recent'>('all');
 
   const toggleFavorite = (id: string) => {
@@ -69,6 +87,46 @@ export const TaskHistory = () => {
 
   const deleteTask = (id: string) => {
     setTasks(tasks.filter(task => task.id !== id));
+    
+    // Also remove from localStorage if it's a saved task
+    const saved = JSON.parse(localStorage.getItem('automate-tasks') || '[]');
+    const filtered = saved.filter((task: any) => task.id !== id);
+    localStorage.setItem('automate-tasks', JSON.stringify(filtered));
+    
+    toast({
+      title: "Task Deleted",
+      description: "Task has been removed from your library."
+    });
+  };
+
+  const runTask = async (task: Task) => {
+    toast({
+      title: "Task Started",
+      description: `Running "${task.name}"...`
+    });
+
+    // Simulate task execution
+    for (let i = 0; i < task.keySequence.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: `Step ${i + 1}`,
+        description: `Executing: ${task.keySequence[i]}`
+      });
+    }
+
+    toast({
+      title: "Task Completed",
+      description: `"${task.name}" finished successfully.`
+    });
+
+    // Update last used time
+    const updatedTasks = tasks.map(t => 
+      t.id === task.id 
+        ? { ...t, lastUsed: new Date() }
+        : t
+    );
+    setTasks(updatedTasks);
   };
 
   const filteredTasks = tasks.filter(task => {
@@ -169,7 +227,11 @@ export const TaskHistory = () => {
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button size="sm" className="w-full">
+                <Button 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => runTask(task)}
+                >
                   <Play className="h-4 w-4 mr-1" />
                   Run
                 </Button>

@@ -5,13 +5,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
 import { 
   Sparkles, 
   Edit, 
   Check, 
   X, 
   RefreshCw,
-  Wand2
+  Wand2,
+  Play
 } from 'lucide-react';
 
 interface GeneratedTask {
@@ -26,6 +28,7 @@ export const AITaskCreator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedTask, setGeneratedTask] = useState<GeneratedTask | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
   const generateTask = async () => {
     if (!userInput.trim()) return;
@@ -90,11 +93,59 @@ export const AITaskCreator = () => {
 
   const handleApprove = () => {
     if (generatedTask) {
-      console.log('Task approved:', generatedTask);
-      // In a real app, save to task history
+      // Save to localStorage
+      const savedTasks = JSON.parse(localStorage.getItem('automate-tasks') || '[]');
+      const taskToSave = {
+        id: Date.now().toString(),
+        name: generatedTask.name,
+        description: generatedTask.description,
+        steps: generatedTask.actions.map(action => ({
+          type: 'action',
+          description: `Press ${action.key}`,
+          action: 'key_press',
+          parameters: { key: action.key, condition: action.condition }
+        })),
+        created: new Date().toISOString()
+      };
+      
+      savedTasks.push(taskToSave);
+      localStorage.setItem('automate-tasks', JSON.stringify(savedTasks));
+      
+      toast({
+        title: "Task Saved",
+        description: `"${generatedTask.name}" has been saved to your automation library.`
+      });
+      
       setGeneratedTask(null);
       setUserInput('');
     }
+  };
+
+  const runTask = async () => {
+    if (!generatedTask) return;
+    
+    setIsRunning(true);
+    toast({
+      title: "Task Started",
+      description: `Running "${generatedTask.name}"...`
+    });
+
+    // Simulate task execution
+    for (let action of generatedTask.actions) {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Action Executed",
+        description: `Pressed ${action.key} - ${action.condition}`
+      });
+    }
+
+    setIsRunning(false);
+    
+    toast({
+      title: "Task Completed",
+      description: `"${generatedTask.name}" finished successfully.`
+    });
   };
 
   const handleEdit = () => {
@@ -219,7 +270,7 @@ export const AITaskCreator = () => {
                 </div>
               </div>
 
-              <div className="flex gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-4">
                 {isEditing ? (
                   <>
                     <Button onClick={handleSaveEdit} size="sm">
@@ -232,6 +283,24 @@ export const AITaskCreator = () => {
                   </>
                 ) : (
                   <>
+                    <Button 
+                      onClick={runTask} 
+                      disabled={isRunning}
+                      variant="secondary" 
+                      size="sm"
+                    >
+                      {isRunning ? (
+                        <>
+                          <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+                          Running...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-4 w-4 mr-2" />
+                          Test Run
+                        </>
+                      )}
+                    </Button>
                     <Button onClick={handleApprove} size="sm">
                       <Check className="h-4 w-4 mr-2" />
                       Approve & Save

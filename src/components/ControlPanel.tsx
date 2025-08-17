@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { FloatingWindow } from './FloatingWindow';
 import { TaskHistory } from './TaskHistory';
 import { AITaskCreator } from './AITaskCreator';
+import { AppLauncher } from './AppLauncher';
 import { 
   Plus, 
   Monitor, 
@@ -29,7 +30,7 @@ export const ControlPanel = () => {
 
   const stats = [
     { label: 'Active Windows', value: activeWindows.length, icon: Monitor },
-    { label: 'Saved Tasks', value: 12, icon: Layers },
+    { label: 'Saved Tasks', value: JSON.parse(localStorage.getItem('automate-tasks') || '[]').length + 6, icon: Layers },
     { label: 'Automations Today', value: 8, icon: Zap }
   ];
 
@@ -180,6 +181,9 @@ export const ControlPanel = () => {
         <div id="ai-creator">
           <AITaskCreator />
         </div>
+
+        {/* App Launcher */}
+        <AppLauncher />
 
         {/* Task History */}
         {showHistory && (

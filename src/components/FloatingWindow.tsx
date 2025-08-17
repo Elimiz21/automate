@@ -27,6 +27,8 @@ export const FloatingWindow = ({ onClose, onMinimize }: FloatingWindowProps) => 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
+  const [recordedActions, setRecordedActions] = useState<any[]>([]);
+  const [recordingTime, setRecordingTime] = useState(0);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
 
