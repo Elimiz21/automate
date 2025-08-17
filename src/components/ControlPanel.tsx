@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FloatingWindow } from './FloatingWindow';
 import { TaskHistory } from './TaskHistory';
+import { AITaskCreator } from './AITaskCreator';
 import { 
   Plus, 
   Monitor, 
@@ -102,6 +103,9 @@ export const ControlPanel = () => {
             </Button>
           </div>
         </Card>
+
+        {/* AI Task Creator */}
+        <AITaskCreator />
 
         {/* Task History */}
         {showHistory && (
