@@ -59,53 +59,127 @@ export const ControlPanel = () => {
           ))}
         </div>
 
-        {/* Main Controls */}
+        {/* Main Automation Options */}
         <Card className="p-6 bg-glass-bg backdrop-blur-glass border-glass-border shadow-floating">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-foreground">Control Center</h2>
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-foreground mb-2">Choose Your Automation Method</h2>
+            <p className="text-muted-foreground">Three ways to create and run automation tasks</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* AI Task Creator */}
+            <div className="text-center space-y-4">
+              <div className="p-4 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-lg mx-auto mb-3 flex items-center justify-center">
+                  <Zap className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">AI Task Creator</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Describe what you need in plain English and let AI generate the automation task
+                </p>
+                <Button 
+                  onClick={() => document.getElementById('ai-creator')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="w-full"
+                >
+                  Create with AI
+                </Button>
+              </div>
+            </div>
+
+            {/* Record Mode */}
+            <div className="text-center space-y-4">
+              <div className="p-4 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl border border-blue-500/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                  <Plus className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">Record Mode</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Open a floating window and record your keystrokes in real-time
+                </p>
+                <Button 
+                  onClick={createWindow}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  Start Recording
+                </Button>
+              </div>
+            </div>
+
+            {/* Playback Mode */}
+            <div className="text-center space-y-4">
+              <div className="p-4 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl border border-green-500/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                  <Layers className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">Playback Mode</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Select and run previously created automation tasks
+                </p>
+                <Button 
+                  onClick={() => setShowHistory(!showHistory)}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  View Tasks
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Quick Actions */}
+        <Card className="p-6 bg-glass-bg backdrop-blur-glass border-glass-border shadow-soft">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-foreground">Quick Actions</h3>
             <Badge variant="secondary" className="animate-pulse">
-              {activeWindows.length} Active
+              {activeWindows.length} Active Windows
             </Badge>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Button 
-              onClick={createWindow}
-              className="h-20 flex flex-col gap-2"
+              variant="outline"
+              size="sm"
+              className="h-16 flex flex-col gap-1"
             >
-              <Plus className="h-6 w-6" />
-              New Window
+              <Settings className="h-4 w-4" />
+              <span className="text-xs">Settings</span>
             </Button>
 
             <Button 
-              variant="secondary"
-              onClick={() => setShowHistory(!showHistory)}
-              className="h-20 flex flex-col gap-2"
+              variant="outline"
+              size="sm"
+              className="h-16 flex flex-col gap-1"
             >
-              <Layers className="h-6 w-6" />
-              Task History
+              <Monitor className="h-4 w-4" />
+              <span className="text-xs">Multi-Screen</span>
             </Button>
 
             <Button 
-              variant="secondary"
-              className="h-20 flex flex-col gap-2"
+              variant="outline"
+              size="sm"
+              className="h-16 flex flex-col gap-1"
             >
-              <Settings className="h-6 w-6" />
-              Settings
+              <Info className="h-4 w-4" />
+              <span className="text-xs">Help</span>
             </Button>
 
             <Button 
-              variant="secondary"
-              className="h-20 flex flex-col gap-2"
+              variant="outline"
+              size="sm"
+              className="h-16 flex flex-col gap-1"
             >
-              <Info className="h-6 w-6" />
-              About
+              <Zap className="h-4 w-4" />
+              <span className="text-xs">Analytics</span>
             </Button>
           </div>
         </Card>
 
         {/* AI Task Creator */}
-        <AITaskCreator />
+        <div id="ai-creator">
+          <AITaskCreator />
+        </div>
 
         {/* Task History */}
         {showHistory && (
@@ -114,26 +188,44 @@ export const ControlPanel = () => {
           </div>
         )}
 
-        {/* Instructions */}
+        {/* How It Works */}
         <Card className="p-6 bg-glass-bg backdrop-blur-glass border-glass-border shadow-soft">
-          <h3 className="text-lg font-semibold text-foreground mb-4">How to Use</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-muted-foreground">
-            <div>
-              <h4 className="font-medium text-foreground mb-2">Recording Mode</h4>
-              <ul className="space-y-1">
-                <li>• Click "New Window" to create a floating automation panel</li>
-                <li>• Press "Record" to start capturing keystrokes</li>
-                <li>• Perform your actions (launch apps, approve dialogs)</li>
-                <li>• Press "Stop" to save the sequence</li>
+          <h3 className="text-lg font-semibold text-foreground mb-4">How Each Method Works</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+                <h4 className="font-medium text-foreground">AI Task Creator</h4>
+              </div>
+              <ul className="space-y-1 text-muted-foreground ml-4">
+                <li>• Describe your needs in natural language</li>
+                <li>• AI analyzes and creates structured tasks</li>
+                <li>• Edit and approve before saving</li>
+                <li>• Perfect for complex conditional logic</li>
               </ul>
             </div>
-            <div>
-              <h4 className="font-medium text-foreground mb-2">Playback Mode</h4>
-              <ul className="space-y-1">
-                <li>• Select a saved task from history</li>
-                <li>• Click "Play" to execute the automation</li>
-                <li>• Use quick launch buttons for common apps</li>
-                <li>• Drag windows to any screen for multi-monitor support</li>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+                <h4 className="font-medium text-foreground">Record Mode</h4>
+              </div>
+              <ul className="space-y-1 text-muted-foreground ml-4">
+                <li>• Open floating automation window</li>
+                <li>• Press record and perform actions</li>
+                <li>• System captures your keystrokes</li>
+                <li>• Great for exact sequence replication</li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                <h4 className="font-medium text-foreground">Playback Mode</h4>
+              </div>
+              <ul className="space-y-1 text-muted-foreground ml-4">
+                <li>• Browse your saved automation tasks</li>
+                <li>• Filter by app, frequency, or tags</li>
+                <li>• One-click execution of any task</li>
+                <li>• Organize favorites for quick access</li>
               </ul>
             </div>
           </div>
