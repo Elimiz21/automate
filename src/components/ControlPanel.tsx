@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { FloatingWindow } from './FloatingWindow';
 import { TaskHistory } from './TaskHistory';
 import { AITaskCreator } from './AITaskCreator';
+import { AIGuidedAutomation } from './AIGuidedAutomation';
 import { AppLauncher } from './AppLauncher';
 import { 
   Plus, 
@@ -12,7 +13,9 @@ import {
   Layers,
   Settings,
   Info,
-  Zap
+  Zap,
+  Brain,
+  Video
 } from 'lucide-react';
 
 export const ControlPanel = () => {
@@ -64,10 +67,10 @@ export const ControlPanel = () => {
         <Card className="p-6 bg-glass-bg backdrop-blur-glass border-glass-border shadow-floating">
           <div className="text-center mb-6">
             <h2 className="text-xl font-semibold text-foreground mb-2">Choose Your Automation Method</h2>
-            <p className="text-muted-foreground">Three ways to create and run automation tasks</p>
+            <p className="text-muted-foreground">Four ways to create and run automation tasks</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* AI Task Creator */}
             <div className="text-center space-y-4">
               <div className="p-4 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
@@ -81,8 +84,30 @@ export const ControlPanel = () => {
                 <Button 
                   onClick={() => document.getElementById('ai-creator')?.scrollIntoView({ behavior: 'smooth' })}
                   className="w-full"
+                  size="sm"
                 >
                   Create with AI
+                </Button>
+              </div>
+            </div>
+
+            {/* AI-Guided Automation */}
+            <div className="text-center space-y-4">
+              <div className="p-4 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">AI-Guided Mode</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Get step-by-step AI guidance while recording your screen for perfect automation
+                </p>
+                <Button 
+                  onClick={() => document.getElementById('ai-guided')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="w-full"
+                  size="sm"
+                >
+                  <Video className="h-4 w-4 mr-1" />
+                  Start Guide
                 </Button>
               </div>
             </div>
@@ -101,6 +126,7 @@ export const ControlPanel = () => {
                   onClick={createWindow}
                   variant="secondary"
                   className="w-full"
+                  size="sm"
                 >
                   Start Recording
                 </Button>
@@ -121,6 +147,7 @@ export const ControlPanel = () => {
                   onClick={() => setShowHistory(!showHistory)}
                   variant="secondary"
                   className="w-full"
+                  size="sm"
                 >
                   View Tasks
                 </Button>
@@ -182,6 +209,11 @@ export const ControlPanel = () => {
           <AITaskCreator />
         </div>
 
+        {/* AI-Guided Automation */}
+        <div id="ai-guided">
+          <AIGuidedAutomation />
+        </div>
+
         {/* App Launcher */}
         <AppLauncher />
 
@@ -195,7 +227,7 @@ export const ControlPanel = () => {
         {/* How It Works */}
         <Card className="p-6 bg-glass-bg backdrop-blur-glass border-glass-border shadow-soft">
           <h3 className="text-lg font-semibold text-foreground mb-4">How Each Method Works</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
@@ -206,6 +238,18 @@ export const ControlPanel = () => {
                 <li>• AI analyzes and creates structured tasks</li>
                 <li>• Edit and approve before saving</li>
                 <li>• Perfect for complex conditional logic</li>
+              </ul>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                <h4 className="font-medium text-foreground">AI-Guided Mode</h4>
+              </div>
+              <ul className="space-y-1 text-muted-foreground ml-4">
+                <li>• AI creates step-by-step instructions</li>
+                <li>• Screen recording captures everything</li>
+                <li>• Real-time guidance for perfect timing</li>
+                <li>• Creates visual proof of automation</li>
               </ul>
             </div>
             <div className="space-y-2">
